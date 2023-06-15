@@ -1,0 +1,58 @@
+<?php
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Config\ConfigManagerInterface;
+
+/**
+ * Implements hook_form_FORM_ID_alter() to add a form element for htaccess editing.
+ */
+function htaccess_editor_form_system_site_information_settings_alter(array &$form, FormStateInterface $form_state, $form_id) {
+  // Add a textarea field for htaccess editing.
+  $form['htaccess_editor'] = [
+    '#type' => 'textarea',
+    '#title' => t('Htaccess Editor'),
+    '#description' => t('Edit the htaccess file.'),
+    '#default_value' => file_get_contents('.htaccess'), // Load the current htaccess content.
+    '#rows' => 20,
+  ];
+
+  // Add a submit button to save the changes.
+  $form['submit'] = [
+    '#type' => 'submit',
+    '#value' => t('Save htaccess'),
+    '#submit' => ['htaccess_editor_submit'],
+  ];
+}
+
+/**
+ * Submit handler for saving the edited htaccess file.
+ */
+function htaccess_editor_submit(array &$form, FormStateInterface $form_state) {
+  $content = $form_state->getValue('htaccess_editor');
+
+  // Save the edited htaccess content to the file.
+  $result = file_put_contents('.htaccess', $content);
+
+  if ($result !== FALSE) {
+    \Drupal::messenger()->addMessage(t('Htaccess file saved successfully.'));
+  }
+  else {
+    \Drupal::messenger()->addError(t('Error saving htaccess file.'));
+  }
+}
+
+/**
+ * Implements hook_uninstall() to remove any module configurations.
+ */
+function htaccess_editor_uninstall() {
+  // Remove the menu item.
+  $config = \Drupal::configFactory()->getEditable('htaccess_editor.settings');
+  $config->delete();
+
+  // Clear menu cache.
+  $router = \Drupal::service('router.builder');
+  $router->rebuild();
+
+  \Drupal::messenger()->addMessage(t('Htaccess Editor module uninstalled.'));
+}

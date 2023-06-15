@@ -1,0 +1,7 @@
+name: 'Htaccess Editor'
+type: module
+description: 'Allows editing of the htaccess file from within the Drupal interface.'
+core_version_requirement: ^8 || ^9 || ^10
+package: Custom
+dependencies:
+  - drupal:system

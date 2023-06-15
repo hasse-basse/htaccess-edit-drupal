@@ -1,0 +1,7 @@
+htaccess_editor.settings:
+  path: '/admin/config/system/htaccess-editor'
+  defaults:
+    _form: '\Drupal\htaccess_editor\Form\HtaccessEditorForm'
+    _title: 'Htaccess Editor'
+  requirements:
+    _permission: 'administer site configuration'

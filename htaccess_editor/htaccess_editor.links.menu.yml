@@ -1,0 +1,6 @@
+htaccess_editor.settings:
+  title: 'Htaccess Editor'
+  description: 'Edit the htaccess file.'
+  parent: system.admin_config_system
+  route_name: htaccess_editor.settings
+  weight: 99
